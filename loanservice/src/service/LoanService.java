@@ -3,11 +3,14 @@ package service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
 import model.Loan;
 import model.LoanType;
 import model.user;
 
 public class LoanService {
+	private static final Logger logger = Logger.getLogger(LoanService.class.getName());
 	private static List<user> users;
 	static{
 	Loan loan1=new Loan("Car Loan", LocalDateTime.of(2027, 5, 1, 0, 0), 15000, LoanType.CAR);
@@ -24,10 +27,11 @@ public class LoanService {
 	}
 	//--------------------------------------------------------------------- 
     public static List<Loan> findUserLoans(String username) throws UserNotFoundException{
-		user finduser=users.stream()
+		logger.info("searching for: "+username);
+    	user finduser=users.stream()
 				.filter(t -> t.getUsername().equals(username)).findFirst().get();
-    	
 		if (finduser == null) {
+		logger.warning(username+" is not found");
 			throw new UserNotFoundException("we couldn't find user");
 		}
     	
@@ -36,6 +40,7 @@ public class LoanService {
     }
     ////--------------------------------------------------------------------
     public static boolean isUserLoansDateReached(String username)throws UserNotFoundException,NoLoanForUserException{
+    	logger.info("searching for "+username);
     	user user = users
 				.stream()
 				.filter(t -> t.getUsername().equals(username))
